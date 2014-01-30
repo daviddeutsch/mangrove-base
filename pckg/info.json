@@ -1,0 +1,13 @@
+{
+	"vendor":    "valanx",
+	"authors":   [
+		{
+			"name":     "David Deutsch",
+			"email":    "skore@valanx.org",
+			"homepage": "http://valanx.org"
+		}
+	],
+	"version":   "1.0",
+	"copyright": "Copyright (C) 2014 David Deutsch",
+	"license":   "GNU/GPL Version 3.0 or later - http://www.gnu.org/copyleft/gpl.html"
+}
