@@ -11,16 +11,10 @@ class AbstractService
 	{
 		if ( !$this->is_callable($method) ) return null;
 
-		if ( empty( $path ) ) {
-			if ( empty( $data ) ) {
-				call_user_func( array($this, $method) );
-			} else {
-				call_user_func( array($this, $method), $data );
-			}
-		} elseif ( empty( $data ) ) {
-			call_user_func( array($this, $method), $path );
-		} else {
-			call_user_func( array($this, $method), $path, $data );
-		}
+		$params = array();
+		if ( !empty($path) ) $params[] = $path;
+		if ( !empty($data) ) $params[] = $data;
+
+		call_user_func_array( array($this, $method), $params );
 	}
 }

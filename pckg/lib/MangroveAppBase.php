@@ -59,9 +59,6 @@ class MangroveAppBase
 		exit;
 	}
 
-	/**
-	 * @param object $japp JApplication
-	 */
 	private static function getDB()
 	{
 		$japp = JFactory::getApplication();
