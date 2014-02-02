@@ -9,19 +9,39 @@ class MangroveAppBase
 
 	public static $base_path;
 
+	public static $app_name;
+
 	public static $services;
 
-	public static function init( $base='', $services=array() )
+	public static $assets;
+
+	public static function init( $base='', $name='', $services=array() )
 	{
 		if ( !empty($base) ) {
 			self::$base_path = $base;
 		}
+
+		if ( !empty($name) ) {
+			self::$app_name = $name;
+		}
+
 
 		if ( !empty($services) ) {
 			self::$services = $services;
 		}
 
 		self::getDB();
+	}
+
+	public static function start()
+	{
+		if ( !empty( $_GET['path'] ) ) {
+			self::resolve( substr($_GET['path'], 1) );
+		} else {
+			self::getApp();
+
+			include self::$base_path . '/templates/main.html';
+		}
 	}
 
 	public static function resolve( $path )
@@ -31,6 +51,14 @@ class MangroveAppBase
 		$p = explode('/', $path);
 
 		$service = ucfirst($p[0]) . 'Service';
+
+		if ( !class_exists($service) ) {
+			if ( !in_array($p[0], self::$services) ) {
+				exit;
+			}
+
+			$service = 'RestService';
+		}
 
 		if ( isset($p[1]) ) {
 			$method = strtolower($_SERVER['REQUEST_METHOD']) . ucfirst($p[1]);
@@ -46,15 +74,11 @@ class MangroveAppBase
 			$input = json_decode($input);
 		}
 
-		if ( class_exists($service) ) {
-			$service = new $service();
+		$service = new $service();
 
-			$result = $service->call($method, $path, $input);
+		$result = $service->call($method, $path, $input);
 
-			echo stripslashes(json_encode($result));
-
-			exit;
-		}
+		self::returnJSON($result);
 
 		exit;
 	}
@@ -87,6 +111,50 @@ class MangroveAppBase
 		self::$r->setupPipeline($japp->getCfg('dbprefix'));
 
 		self::$r->redbean->beanhelper->setModelFormatter(new MangroveTodoModelFormatter);
+	}
+
+	public static function returnJSON( $data )
+	{
+		echo stripslashes(json_encode($data));
+
+		exit;
+	}
+
+	protected static function addAssets( $type, $asset )
+	{
+		if ( is_array($asset) ) {
+			self::$assets[$type] = array_merge(self::$assets[$type], $asset);
+		} else {
+			self::$assets[$type][] = $asset;
+		}
+	}
+
+	protected static function prepareDocument()
+	{
+		$document = JFactory::getDocument();
+
+		if ( !empty(self::$assets['css']) ) {
+			$csslink = '<link rel="stylesheet" type="text/css" media="all" href="'
+				. JURI::root()
+				. 'media/'
+				. self::$app_name
+				. '/css/%s.css" />';
+
+			foreach ( self::$assets['css'] as $file ) {
+				$document->addCustomTag( sprintf($csslink, $file) );
+			}
+		}
+
+		if ( !empty(self::$assets['js']) ) {
+			$jslink = JURI::root()
+				. 'media/'
+				. self::$app_name
+				. '/js/%s.js" />';
+
+			foreach ( self::$assets['css'] as $file ) {
+				$document->addScript( sprintf($jslink, $file) );
+			}
+		}
 	}
 
 }
