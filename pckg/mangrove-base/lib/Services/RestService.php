@@ -73,6 +73,6 @@ class RestService extends AbstractService
 
 	protected function restHandler()
 	{
-		return new \RedBean_Plugin_BeanCan(MangroveTodoApp::$r);
+		return new \RedBean_Plugin_BeanCan(MangroveAppBase::$r);
 	}
 }
