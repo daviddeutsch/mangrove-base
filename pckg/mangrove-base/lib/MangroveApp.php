@@ -1,6 +1,6 @@
 <?php
 
-class MangroveAppBase
+class MangroveApp
 {
 	/**
 	 * @var RedBean_Instance
