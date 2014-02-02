@@ -106,7 +106,7 @@ class MangroveAppBase
 
 		self::$r->selectDatabase('joomla');
 
-		self::$r->prefix($japp->getCfg('dbprefix') . 'mangrovetodo_');
+		self::$r->prefix($japp->getCfg('dbprefix') . self::$app_name . '_');
 
 		self::$r->setupPipeline($japp->getCfg('dbprefix'));
 
@@ -137,7 +137,7 @@ class MangroveAppBase
 			$csslink = '<link rel="stylesheet" type="text/css" media="all" href="'
 				. JURI::root()
 				. 'media/'
-				. self::$app_name
+				. 'com_' . self::$app_name
 				. '/css/%s.css" />';
 
 			foreach ( self::$assets['css'] as $file ) {
@@ -148,7 +148,7 @@ class MangroveAppBase
 		if ( !empty(self::$assets['js']) ) {
 			$jslink = JURI::root()
 				. 'media/'
-				. self::$app_name
+				. 'com_' . self::$app_name
 				. '/js/%s.js" />';
 
 			foreach ( self::$assets['css'] as $file ) {
