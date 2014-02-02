@@ -15,22 +15,28 @@ class MangroveApp
 
 	public static $assets;
 
-	public static function init( $base='', $name='', $services=array() )
+	private static $apps;
+
+	public static function add( $base='', $name='', $services=array() )
 	{
-		if ( !empty($base) ) {
-			self::$base_path = $base;
+		self::$apps[$name] = new stdClass();
+
+		self::$apps[$name]->base_path = $base;
+		self::$apps[$name]->app_name  = $name;
+		self::$apps[$name]->services  = $services;
+
+		self::select($name);
+	}
+
+	public static function select( $name )
+	{
+		if ( array_key_exists($name, self::$apps) ) {
+			self::$base_path = self::$apps[$name]->base_path;
+			self::$app_name  = self::$apps[$name]->app_name;
+			self::$services  = self::$apps[$name]->services;
+
+			self::getDB();
 		}
-
-		if ( !empty($name) ) {
-			self::$app_name = $name;
-		}
-
-
-		if ( !empty($services) ) {
-			self::$services = $services;
-		}
-
-		self::getDB();
 	}
 
 	public static function start()
@@ -87,30 +93,32 @@ class MangroveApp
 	{
 		$japp = JFactory::getApplication();
 
-		self::$r = new RedBean_Instance();
+		if ( !is_object(self::$r) ) {
+			self::$r = new RedBean_Instance();
 
-		if ( $japp->getCfg('dbtype') == 'mysqli' ) {
-			$type = 'mysql';
-		} else {
-			$type = $japp->getCfg('dbtype');
+			if ( $japp->getCfg('dbtype') == 'mysqli' ) {
+				$type = 'mysql';
+			} else {
+				$type = $japp->getCfg('dbtype');
+			}
+
+			self::$r->addDatabase(
+				'joomla',
+				$type . ':'
+				. 'host=' . $japp->getCfg('host') . ';'
+				. 'dbname=' . $japp->getCfg('db'),
+				$japp->getCfg('user'),
+				$japp->getCfg('password')
+			);
+
+			self::$r->selectDatabase('joomla');
 		}
-
-		self::$r->addDatabase(
-			'joomla',
-			$type . ':'
-			. 'host=' . $japp->getCfg('host') . ';'
-			. 'dbname=' . $japp->getCfg('db'),
-			$japp->getCfg('user'),
-			$japp->getCfg('password')
-		);
-
-		self::$r->selectDatabase('joomla');
 
 		self::$r->prefix($japp->getCfg('dbprefix') . self::$app_name . '_');
 
 		self::$r->setupPipeline($japp->getCfg('dbprefix'));
 
-		self::$r->redbean->beanhelper->setModelFormatter(new MangroveTodoModelFormatter);
+		self::$r->redbean->beanhelper->setModelFormatter(new MangroveModelFormatter);
 	}
 
 	public static function returnJSON( $data )
