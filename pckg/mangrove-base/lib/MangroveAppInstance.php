@@ -15,8 +15,8 @@ class MangroveAppInstance
 
 	public function create( $base='', $name='', $services=array() )
 	{
+		$this->name      = $name;
 		$this->base_path = $base;
-		$this->app_name  = $name;
 		$this->services  = $services;
 	}
 
@@ -37,7 +37,7 @@ class MangroveAppInstance
 			$csslink = '<link rel="stylesheet" type="text/css" media="all" href="'
 				. JURI::root()
 				. 'media/'
-				. 'com_' . $this->app_name
+				. 'com_' . $this->name
 				. '/css/%s.css" />';
 
 			foreach ( $this->assets['css'] as $file ) {
@@ -48,7 +48,7 @@ class MangroveAppInstance
 		if ( !empty($this->assets['js']) ) {
 			$jslink = JURI::root()
 				. 'media/'
-				. 'com_' . $this->app_name
+				. 'com_' . $this->name
 				. '/js/%s.js" />';
 
 			foreach ( $this->assets['css'] as $file ) {

@@ -106,7 +106,7 @@ class MangroveApp
 		if ( !is_object(self::$r) ) self::createDB();
 
 		self::$r->prefix(
-			$japp->getCfg('dbprefix') . self::$app->app_name . '_'
+			$japp->getCfg('dbprefix') . self::$app->name . '_'
 		);
 
 		self::$r->setupPipeline($japp->getCfg('dbprefix'));
@@ -157,7 +157,7 @@ class MangroveApp
 			$csslink = '<link rel="stylesheet" type="text/css" media="all" href="'
 				. JURI::root()
 				. 'media/'
-				. 'com_' . self::$app->app_name
+				. 'com_' . self::$app->name
 				. '/css/%s.css" />';
 
 			foreach ( self::$app->assets['css'] as $file ) {
@@ -168,7 +168,7 @@ class MangroveApp
 		if ( !empty(self::$app->assets['js']) ) {
 			$jslink = JURI::root()
 				. 'media/'
-				. 'com_' . self::$app->app_name
+				. 'com_' . self::$app->name
 				. '/js/%s.js" />';
 
 			foreach ( self::$app->assets['css'] as $file ) {
