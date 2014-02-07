@@ -52,7 +52,12 @@ class MangroveApp
 	public static function start()
 	{
 		if ( !empty( $_GET['path'] ) ) {
-			self::resolve( substr($_GET['path'], 1) );
+			self::resolve(
+				substr(
+					filter_input(INPUT_GET, 'path', FILTER_SANITIZE_URL),
+					1
+				)
+			);
 		} else {
 			self::$app->getApp();
 		}
@@ -63,6 +68,10 @@ class MangroveApp
 		if ( empty($path) ) return self::$app->getApp();
 
 		$p = explode('/', $path);
+
+		foreach ( $p as $k => $v ) {
+			$p[$k] = preg_replace("/[^a-z0-9.]+/i", "", $v);
+		}
 
 		$service = ucfirst($p[0]) . 'Service';
 
