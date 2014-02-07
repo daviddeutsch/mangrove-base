@@ -20,6 +20,11 @@ class MangroveAppInstance
 		$this->services  = $services;
 	}
 
+	public function getApp()
+	{
+		include $this->base_path . '/templates/main.html';
+	}
+
 	protected function addAssets( $type, $asset )
 	{
 		if ( is_array($asset) ) {

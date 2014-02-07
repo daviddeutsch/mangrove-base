@@ -8,7 +8,7 @@ class MangroveApp
 	/**
 	 * @var array List of applications active in the current request
 	 */
-	private static $apps;
+	private static $apps = array();
 
 	/**
 	 * @var object Currently active application
@@ -55,8 +55,6 @@ class MangroveApp
 			self::resolve( substr($_GET['path'], 1) );
 		} else {
 			self::$app->getApp();
-
-			include self::$app->base_path . '/templates/main.html';
 		}
 	}
 
