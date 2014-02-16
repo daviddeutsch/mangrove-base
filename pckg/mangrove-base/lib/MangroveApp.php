@@ -35,9 +35,9 @@ class MangroveApp
 
 		$instance = new $class();
 
-		self::$apps[$instance->app_name] = $instance;
+		self::$apps[$instance->name] = $instance;
 
-		return self::select($instance->app_name);
+		return self::select($instance->name);
 	}
 
 	public static function select( $name )
@@ -46,7 +46,11 @@ class MangroveApp
 
 		self::$app =& self::$apps[$name];
 
-		return self::getDB();
+		self::getDB();
+
+		self::$app->ready();
+
+		return true;
 	}
 
 	public static function start()
