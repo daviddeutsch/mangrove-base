@@ -28,7 +28,11 @@ class MangroveAppInstance
 	protected function addAssets( $type, $asset )
 	{
 		if ( is_array($asset) ) {
-			$this->assets[$type] = array_merge($this->assets[$type], $asset);
+			if ( !empty($this->assets[$type]) ) {
+				$this->assets[$type] = array_merge($this->assets[$type], $asset);
+			} else {
+				$this->assets[$type] = $asset;
+			}
 		} else {
 			$this->assets[$type][] = $asset;
 		}
