@@ -62,8 +62,13 @@ class MangroveAppInstance
 				. 'com_' . $this->name
 				. '/js/%s.js" />';
 
-			foreach ( $this->assets['css'] as $file ) {
-				$document->addScript( sprintf($jslink, $file) );
+			foreach ( $this->assets['js'] as $file ) {
+				if ( $file == 'angular.min' ) {
+					$document->addScript( 'https://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.js' );
+				} else {
+					$document->addScript( sprintf($jslink, $file) );
+				}
+
 			}
 		}
 	}

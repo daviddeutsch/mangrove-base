@@ -1,9 +1,6 @@
 var mangroveBase = angular.module("mangroveBase", ['OmniBinder']);
 
 mangroveBase
-	.config();
-
-mangroveBase
 	.service('dataPersist',
 	[
 		'obBinder', 'obBinderTypes', 'mgAppStatus', 'restBinder', '$http',
