@@ -22,6 +22,8 @@ class MangroveAppInstance
 
 	public function getApp()
 	{
+		$this->prepareDocument();
+
 		include $this->base_path . '/templates/main.html';
 	}
 
