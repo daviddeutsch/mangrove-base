@@ -124,7 +124,7 @@ mangroveBase
 				binder.onProtocolChange.call(binder, [change]);
 			}
 
-			function updateCallback(update) {
+			function updateCallback(binder, update) {
 				var index, removed;
 
 				index = getIndexOfItem(binder.scope[binder.model], update.id, binder.key);
@@ -150,15 +150,15 @@ mangroveBase
 				if ( binder.type !== obBinderTypes.COLLECTION ) return;
 
 				binder.persist.on('add', binder.query,
-					function(){ addCallback(binder, update); }
+					function(update){ addCallback(binder, update); }
 				);
 
 				binder.persist.on('remove', binder.query,
-					function(){ removeCallback(binder, update); }
+					function(update){ removeCallback(binder, update); }
 				);
 
 				binder.persist.on('update', binder.query,
-					function(){ updateCallback(binder, update); }
+					function(update){ updateCallback(binder, update); }
 				);
 			};
 
@@ -259,20 +259,8 @@ mangroveBase
 
 				$http.get('/hook/updates')
 					.success(
-					function (data) {
+					function (updates) {
 						// If we find nothing right now, slow down a little
-						if ( data.length < 1 ) {
-							delay = 2000;
-
-							return;
-						}
-
-						var updates = [];
-
-						angular.forEach(data, function(update) {
-							updates.push(update.originalElement);
-						});
-
 						if ( updates.length < 1 ) {
 							delay = 2000;
 
