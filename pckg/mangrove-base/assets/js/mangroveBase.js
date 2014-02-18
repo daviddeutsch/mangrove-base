@@ -310,7 +310,29 @@ mangroveBase
 );
 
 mangroveBase
-	.service('appStatus',
+	.service( 'mgAppSession',
+		[
+		'$http', 'mgAppStatus', 'DirtyPersist',
+		function( $http, mgAppStatus, DirtyPersist ) {
+			function Session() {
+				var session = this;
+
+				this.init = function(component) {
+					$http.defaults.transformRequest.push(
+						function (data, headersGetter) {
+							var test = data;
+						}
+					)
+				};
+			}
+
+			return new Session();
+		}
+	]
+);
+
+mangroveBase
+	.service('mgAppStatus',
 	[
 	'$rootScope',
 	function ( $rootScope )
