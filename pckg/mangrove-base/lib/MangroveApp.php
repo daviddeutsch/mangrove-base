@@ -71,6 +71,8 @@ class MangroveApp
 	{
 		if ( empty($path) ) return self::$app->getApp();
 
+		if ( strpos($path, '/') === 0 ) $path = substr($path, 1);
+
 		$p = explode('/', $path);
 
 		foreach ( $p as $k => $v ) {
