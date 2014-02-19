@@ -22,6 +22,10 @@ class MangroveAppInstance
 
 	public function getApp()
 	{
+		$this->addAssets('css', 'app');
+
+		$this->addAssets('js', 'app');
+
 		$this->prepareDocument();
 
 		include $this->base_path . '/templates/main.html';
