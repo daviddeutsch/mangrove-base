@@ -108,8 +108,6 @@ class MangroveApp
 		$result = $service->call($method, $path, $input);
 
 		self::returnJSON($result);
-
-		exit;
 	}
 
 	private static function getDB()

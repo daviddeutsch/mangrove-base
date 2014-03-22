@@ -333,7 +333,7 @@ mangroveBase
 );
 
 mangroveBase
-	.service( 'mgAppConnector',
+	.service( 'mgAppHttp',
 	[
 	'$http',
 	function( $http )
@@ -351,9 +351,14 @@ mangroveBase
 		this['delete'] = function(path) {
 			return $http.delete(this.baseUrl+path);
 		};
+
+		this.setCommonHeader = function(name, value)
+		{
+			$http.defaults.headers.common[name] = value;
+		}
 	}
 	]
-);
+	);
 
 mangroveBase
 	.service('mgAppStatus',
@@ -366,12 +371,12 @@ mangroveBase
 		this.loading = function () {
 			clearTimeout( timer );
 
-			$rootScope.status = 1;
+			$rootScope.loading = 1;
 		};
 
 		this.ready = function ( delay ) {
 			function ready() {
-				$rootScope.status = 0;
+				$rootScope.loading = 0;
 			}
 
 			clearTimeout( timer );
