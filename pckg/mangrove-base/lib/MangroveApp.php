@@ -53,61 +53,16 @@ class MangroveApp
 		return true;
 	}
 
-	public static function start()
+	public static function start( $context )
 	{
 		if ( !empty( $_GET['path'] ) ) {
-			self::resolve(
-				substr(
-					filter_input(INPUT_GET, 'path', FILTER_SANITIZE_URL),
-					1
-				)
+			S::init(
+				$context,
+				substr(filter_input(INPUT_GET, 'path', FILTER_SANITIZE_URL), 1)
 			);
 		} else {
 			self::$app->getApp();
 		}
-	}
-
-	public static function resolve( $path )
-	{
-		if ( empty($path) ) return self::$app->getApp();
-
-		if ( strpos($path, '/') === 0 ) $path = substr($path, 1);
-
-		$p = explode('/', $path);
-
-		foreach ( $p as $k => $v ) {
-			$p[$k] = preg_replace("/[^a-z0-9.]+/i", "", $v);
-		}
-
-		$service = ucfirst($p[0]) . 'Service';
-
-		if ( !class_exists($service) ) {
-			if ( !in_array($p[0], self::$app->services) ) {
-				exit;
-			}
-
-			$service = 'RestService';
-		}
-
-		if ( isset($p[1]) ) {
-			$method = strtolower($_SERVER['REQUEST_METHOD']) . ucfirst($p[1]);
-		} else {
-			$method = strtolower($_SERVER['REQUEST_METHOD']) . ucfirst($p[0]);
-		}
-
-		$input = @file_get_contents('php://input');
-
-		if ( !$input ) {
-			$input = '';
-		} else {
-			$input = json_decode($input);
-		}
-
-		$service = new $service();
-
-		$result = $service->call($method, $path, $input);
-
-		self::returnJSON($result);
 	}
 
 	private static function getDB()
@@ -151,13 +106,6 @@ class MangroveApp
 		);
 
 		self::$r->selectDatabase('joomla');
-	}
-
-	public static function returnJSON( $data )
-	{
-		echo stripslashes(json_encode($data));
-
-		exit;
 	}
 
 	protected static function prepareDocument()

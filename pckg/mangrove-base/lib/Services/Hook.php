@@ -1,6 +1,6 @@
 <?php
 
-class HookService extends Saltwater_Service
+class Saltwater_Service_Hook extends Saltwater_Service_Service
 {
 	public function postSubscriber( $data )
 	{
