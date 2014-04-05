@@ -1,23 +1,7 @@
 <?php
 
-class HookService extends AbstractService
+class HookService extends Saltwater_Service
 {
-	public function call( $method, $path, $data=null )
-	{
-		if ( !$this->is_callable($method) ) return null;
-
-		if ( $method == 'getUpdates' ) {
-			$p = explode('/', $path);
-			$s = array_pop($p);
-
-			return call_user_func( array($this, $method), $s );
-		} else {
-			call_user_func( array($this, $method), $data );
-
-			return null;
-		}
-	}
-
 	public function postSubscriber( $data )
 	{
 		RedBean_Pipeline::addSubscriber( $data );
@@ -40,22 +24,30 @@ class HookService extends AbstractService
 
 	public function postSubscription( $data )
 	{
-		RedBean_Pipeline::subscribe( $data->client, $data->resource );
+		RedBean_Pipeline::subscribe( $this->getClient(), $data->resource );
 	}
 
 	public function removeSubscription( $data )
 	{
-		RedBean_Pipeline::unsubscribe( $data->client, $data->resource );
+		RedBean_Pipeline::unsubscribe( $this->getClient(), $data->resource );
 	}
 
-	public function getUpdates( $subscriber )
+	public function getUpdates()
 	{
-		$updates = RedBean_Pipeline::getUpdatesForSubscriber( $subscriber );
+		$updates = RedBean_Pipeline::getUpdatesForSubscriber($this->getClient());
 
-		if ( empty($updates) ) return $updates;
+		if ( empty($updates) ) return null;
 
 		foreach ( $updates as $k => $v ) {
 			$updates[$k] = $this->convertNumeric($v);
+
+			$path = explode('/', $updates[$k]->path);
+
+			if ( count($path) > 2 ) {
+				$updates[$k]->object = S::$r->_($path[2], $path[3]);
+
+				$updates[$k]->object = $updates[$k]->object->export();
+			}
 		}
 
 		return $updates;
@@ -80,4 +72,20 @@ class HookService extends AbstractService
 		return $object;
 	}
 
+	protected function getClient()
+	{
+		if ( !empty(S::$session->id) ) {
+			return 'session-' . S::$session->id;
+		}
+
+		if ( is_a(S::$subject, 'RedBean_OODBBean') ) {
+			$class = S::$subject->getMeta('type');
+		} else {
+			$class = explode('\\', get_class(S::$subject));
+
+			$class = implode('', array_slice($class, -1));
+		}
+
+		return strtolower($class) . '-' . S::$subject->id;
+	}
 }

@@ -2,12 +2,13 @@
 	"type": "asset",
 	"require":
 		[
+			"valanx/saltwater",
 			"jquery/jquery",
 			"angularjs/angularjs",
 			"angularjs/angular-animate",
 			"angular-ui/ui-router",
 			"angular-ui/bootstrap",
-			"jeffbcross/omnibinder",
+			"valanx/octobinder",
 			"polymer/observe-js"
 		]
 }
