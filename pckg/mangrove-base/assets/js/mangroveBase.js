@@ -1,4 +1,4 @@
-var mangroveBase = angular.module("mangroveBase", ['OmniBinder']);
+var mangroveBase = angular.module("mangroveBase", ['OctoBinder']);
 
 mangroveBase
 	.service('dataPersist',
@@ -559,7 +559,7 @@ mangroveBase
 		}
 	}
 	]
-	);
+);
 
 mangroveBase
 	.service('mgAppStatus',
