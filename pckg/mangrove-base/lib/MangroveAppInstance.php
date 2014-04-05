@@ -51,8 +51,7 @@ class MangroveAppInstance
 		if ( !empty($this->assets['css']) ) {
 			$csslink = '<link rel="stylesheet" type="text/css" media="all" href="'
 				. JURI::root()
-				. 'media/'
-				. 'com_' . $this->name
+				. 'media/com_' . $this->name
 				. '/css/%s.css" />';
 
 			foreach ( $this->assets['css'] as $file ) {
@@ -62,8 +61,7 @@ class MangroveAppInstance
 
 		if ( !empty($this->assets['js']) ) {
 			$jslink = JURI::root()
-				. 'media/'
-				. 'com_' . $this->name
+				. 'media/com_' . $this->name
 				. '/js/%s.js" />';
 
 			foreach ( $this->assets['js'] as $file ) {
