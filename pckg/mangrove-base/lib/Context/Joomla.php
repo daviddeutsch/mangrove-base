@@ -8,20 +8,18 @@ class Saltwater_Context_Joomla extends Saltwater_Context_Context
 
 		$japp = JFactory::getApplication();
 
-		if ( $japp->getCfg('dbtype') == 'mysqli' ) {
-			$type = 'mysql';
-		} else {
-			$type = $japp->getCfg('dbtype');
-		}
+		$type = $japp->getCfg('dbtype');
+
+		if ( $type == 'mysqli' ) $type = 'mysql';
 
 		$this->config = (object) array(
 			'database' => (object) array(
 					'type' => $type,
-					'host' => 'localhost',
-					'name' => 'valanx_packages',
-					'user' => 'valanx_ASkj',
-					'password' => 'QeNPeK18asd324S'
-				);
+					'host' => $japp->getCfg('host'),
+					'name' => $japp->getCfg('db'),
+					'user' => $japp->getCfg('user'),
+					'password' => $japp->getCfg('password')
+				)
 		);
 	}
 }
