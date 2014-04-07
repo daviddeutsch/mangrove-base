@@ -5,63 +5,21 @@
  */
 class MangroveApp
 {
-	/**
-	 * @var array List of applications active in the current request
-	 */
-	private static $apps = array();
-
-	/**
-	 * @var object Currently active application
-	 */
-	public static $app;
-
-	/**
-	 * @var RedBean_Instance
-	 */
-	public static $r;
-
-	public static function addSimple( $base='', $name='', $services=array() )
-	{
-		self::$apps[$name] = new MangroveAppInstance();
-
-		self::$apps[$name]->create($base, $name, $services);
-
-		self::select($name);
-	}
-
-	public static function add( $class )
-	{
-		if ( !class_exists($class) ) return false;
-
-		$instance = new $class();
-
-		self::$apps[$instance->name] = $instance;
-
-		return self::select($instance->name);
-	}
-
-	public static function select( $name )
-	{
-		if ( !array_key_exists($name, self::$apps) ) return false;
-
-		self::$app =& self::$apps[$name];
-
-		self::getDB();
-
-		self::$app->ready();
-
-		return true;
-	}
+	public static $context;
 
 	public static function start( $context )
 	{
+		self::$context = $context;
+
 		if ( !empty( $_GET['path'] ) ) {
 			S::init(
-				$context,
+				self::$context,
 				substr(filter_input(INPUT_GET, 'path', FILTER_SANITIZE_URL), 1)
 			);
+
+			S::route();
 		} else {
-			self::$app->getApp();
+			self::$context->getApp();
 		}
 	}
 

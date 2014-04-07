@@ -1,6 +1,6 @@
 <?php
 
-class Saltwater_Context_Joomla extends Saltwater_Context_Context
+class Saltwater_Context_Joomla extends Saltwater_Context_Root
 {
 	public function __construct( $parent=null )
 	{
@@ -14,11 +14,12 @@ class Saltwater_Context_Joomla extends Saltwater_Context_Context
 
 		$this->config = (object) array(
 			'database' => (object) array(
-					'type' => $type,
-					'host' => $japp->getCfg('host'),
-					'name' => $japp->getCfg('db'),
-					'user' => $japp->getCfg('user'),
-					'password' => $japp->getCfg('password')
+					'type'     => $type,
+					'host'     => $japp->getCfg('host'),
+					'name'     => $japp->getCfg('db'),
+					'user'     => $japp->getCfg('user'),
+					'password' => $japp->getCfg('password'),
+					'prefix'   => $japp->getCfg('dbprefix')
 				)
 		);
 	}
